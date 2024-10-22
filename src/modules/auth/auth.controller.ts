@@ -10,7 +10,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('signup')
   async signupAsUser(@Body() body: SignupAsUserDTO) {
-    console.log(body);
     await this.authService.signupAsUser(body);
     return {
       success: true,

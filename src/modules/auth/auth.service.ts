@@ -48,7 +48,6 @@ export class AuthService {
       };
 
       const createdUser = await this.userRepository.create(newUser, session);
-      console.log(createdUser);
 
       const newCart: Cart = {
         userId: createdUser._id,
@@ -56,8 +55,6 @@ export class AuthService {
       };
 
       const createdCart = await this.cartRepository.create(newCart, session);
-
-      console.log(createdCart);
 
       await session.commitTransaction();
       session.endSession();
@@ -90,11 +87,12 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new ConflictException('Invalid password');
     }
-    console.log(user);
+
     const payload = {
       id: user._id.toString(),
       email: user.email,
       isVendor: body.isVendor,
+      vendorId: vendor?.id,
     };
     const token = await this.jwtService.signAsync(payload);
 

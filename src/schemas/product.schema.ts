@@ -5,11 +5,11 @@ export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({ collection: 'products' })
 export class Product {
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  id: mongoose.Schema.Types.ObjectId;
-
   @Prop({ type: String, required: true })
   name: string;
+
+  @Prop({ type: String, required: true })
+  description: string;
 
   @Prop({ type: String, required: true })
   imageUrl: string;
@@ -18,19 +18,19 @@ export class Product {
   price: number;
 
   @Prop({ type: Number, required: false, default: 0 })
-  rate: number;
+  rate?: number;
 
   @Prop({ type: Boolean, required: false, default: false })
-  isDeleted: boolean;
+  isDeleted?: boolean;
 
   @Prop({ type: Number, required: true })
   quantity: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Vendor' })
-  vendorId: string;
+  vendorId: mongoose.Types.ObjectId;
 
   @Prop({ type: Date, required: false, default: Date.now() })
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
