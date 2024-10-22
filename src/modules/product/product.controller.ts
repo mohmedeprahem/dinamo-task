@@ -15,12 +15,9 @@ import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { AuthGuard } from 'src/guards/auth.guard';
 @ApiTags('product')
-@Controller('product')
+@Controller('products')
 export class ProductController {
-  constructor(
-    private productService: ProductService,
-    @InjectConnection() private readonly connection: mongoose.Connection,
-  ) {}
+  constructor(private productService: ProductService) {}
 
   @UseGuards(AuthGuard)
   @Post()

@@ -5,23 +5,20 @@ export type VendorDocument = HydratedDocument<Vendor>;
 
 @Schema({ collection: 'vendors' })
 export class Vendor {
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  id: mongoose.Schema.Types.ObjectId;
-
   @Prop({ type: String, required: true })
   name: string;
 
   @Prop({ type: String, required: true })
   description: string;
 
-  @Prop({ type: Number, required: true })
-  rate: number;
+  @Prop({ type: Number, required: false, default: 0 })
+  rate?: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' })
-  userId: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
 
   @Prop({ type: Date, required: false, default: Date.now() })
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export const VendorSchema = SchemaFactory.createForClass(Vendor);
