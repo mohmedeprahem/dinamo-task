@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
 
-export type UserDocument = HydratedDocument<User>;
+export type ProductDocument = HydratedDocument<Product>;
 
-@Schema()
-export class User {
+@Schema({ collection: 'products' })
+export class Product {
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   id: mongoose.Schema.Types.ObjectId;
 
@@ -33,4 +33,4 @@ export class User {
   createdAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -1,13 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
+import { User } from './user.schema';
 
 export type CartDocument = HydratedDocument<Cart>;
 
-@Schema()
+@Schema({ collection: 'carts' })
 export class Cart {
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  id: mongoose.Schema.Types.ObjectId;
-
   @Prop({
     type: [
       {
@@ -19,8 +17,15 @@ export class Cart {
   })
   products: {
     quantity: number;
-    id: mongoose.Schema.Types.ObjectId;
+    id: mongoose.Types.ObjectId;
   }[];
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  userId: mongoose.Types.ObjectId;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
