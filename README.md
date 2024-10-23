@@ -8,9 +8,29 @@ This project is a e-commerce demo built using NestJS, providing essential functi
 
 ## Feature
 
-- **User Authentication**: Secure user authentication mechanisms with .
-- **Friend Connections**: Enable users to establish connections with other users.
-- **Privacy Controls**: Basic privacy settings to manage the visibility of user content and interactions.
+1. Authentication & Authorization:
+
+Secure authentication using JWT tokens for both Sign Up and Login.
+Authorization implemented via Guards, ensuring role-based access for users and vendors.
+
+2. User Management:
+
+- Apply as Vendor API: A user can transition their account to a vendor role while still maintaining user functionalities.
+- Users can log in and perform actions as both a vendor and a regular user.
+3. Product APIs:
+
+- Full CRUD operations for products: Create, ReadAll, ReadOne, Update, and Delete.
+- APIs provide seamless management of product inventory for vendors.
+4. Cart Management:
+
+- Users can Add and Remove products from their cart.
+- A dedicated API to Read the contents of the cart for easy tracking and checkout.
+5. Swagger UI Integration:
+
+- Integrated Swagger UI at http://localhost:3000/api for easy testing and exploration of the available APIs.
+6. Security Enhancements:
+
+- Environment variables (.env) are used to handle sensitive configurations securely. Although pushed to the repo for ease of use during testing, it demonstrates best practices for configurable setups.
 
 ## Documentation
 
