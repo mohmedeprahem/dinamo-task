@@ -117,6 +117,7 @@ export class ProductController {
         name: product.name,
         price: product.price,
         description: product.description,
+        quantity: product.quantity,
         imageUrl: product.imageUrl,
         rate: product.rate,
         vendor:
