@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -149,6 +150,29 @@ export class ProductController {
       success: true,
       status: 200,
       message: 'Product updated successfully',
+    };
+  }
+
+  @Delete(':productId')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('token')
+  async delete(@Req() req: any, @Param('productId') productId: string) {
+    if (!req.user.isVendor) {
+      throw new UnauthorizedException('Only vendors can create products');
+    }
+    const deletedProduct = await this.productService.delete(
+      productId,
+      req.user.vendorId,
+    );
+
+    if (!deletedProduct) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return {
+      success: true,
+      status: 200,
+      message: 'Product deleted successfully',
     };
   }
 }

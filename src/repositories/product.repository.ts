@@ -68,4 +68,16 @@ export class ProductRepository {
       .findByIdAndUpdate(id, body, { new: true, session })
       .exec();
   }
+
+  async update(
+    conditions: QueryOptions<Product>,
+    body: Product,
+    session: ClientSession,
+  ): Promise<boolean> {
+    const result = await this.productModel
+      .updateOne(conditions, body, { new: true, session })
+      .exec();
+
+    return result.modifiedCount > 0;
+  }
 }

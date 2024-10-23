@@ -111,4 +111,32 @@ export class ProductService {
       throw error;
     }
   }
+
+  async delete(productId: string, VendorId: string) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const product = await this.productRepository.findById(productId);
+      if (!product) {
+        throw new Error('Product not found');
+      }
+
+      product.isDeleted = true;
+      const updatedProduct = await this.productRepository.update(
+        { _id: productId, vendorId: VendorId },
+        product,
+        session,
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedProduct;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
 }
