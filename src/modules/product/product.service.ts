@@ -59,11 +59,15 @@ export class ProductService {
     const { page, limit } = paginationParams;
     const skip = (page - 1) * limit;
 
-    const products = await this.productRepository.find({}, { skip, limit }, [
-      'vendorId',
-    ]);
+    const products = await this.productRepository.find(
+      { isDeleted: false },
+      { skip, limit },
+      ['vendorId'],
+    );
 
-    const totalProducts = await this.productRepository.count();
+    const totalProducts = await this.productRepository.count({
+      isDeleted: false,
+    });
     return {
       products,
       total: totalProducts,

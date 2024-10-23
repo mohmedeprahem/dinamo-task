@@ -78,20 +78,26 @@ export class ProductController {
     return {
       success: true,
       status: 200,
-      data: productsData.products.map((product) => ({
-        id: product._id,
-        name: product.name,
-        price: product.price,
-        imageUrl: product.imageUrl,
-        rate: product.rate,
-        vendor:
-          product.vendorId instanceof mongoose.Types.ObjectId
-            ? null
-            : {
-                id: product.vendorId._id,
-                name: product.vendorId.name,
-              },
-      })),
+      data: {
+        products: productsData.products.map((product) => ({
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          imageUrl: product.imageUrl,
+          rate: product.rate,
+          vendor:
+            product.vendorId instanceof mongoose.Types.ObjectId
+              ? null
+              : {
+                  id: product.vendorId._id,
+                  name: product.vendorId.name,
+                },
+        })),
+        total: productsData.total,
+        page: productsData.page,
+        limit: productsData.limit,
+        totalPages: productsData.totalPages,
+      },
     };
   }
 
