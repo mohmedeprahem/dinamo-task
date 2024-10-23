@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
+  Param,
   Post,
   Query,
   Req,
@@ -87,6 +89,35 @@ export class ProductController {
                 name: product.vendorId.name,
               },
       })),
+    };
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    const product = await this.productService.findOne(id);
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return {
+      success: true,
+      status: 200,
+      data: {
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        rate: product.rate,
+        vendor:
+          product.vendorId instanceof mongoose.Types.ObjectId
+            ? null
+            : {
+                id: product.vendorId._id,
+                name: product.vendorId.name,
+              },
+      },
     };
   }
 }

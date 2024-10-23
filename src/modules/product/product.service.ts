@@ -72,4 +72,8 @@ export class ProductService {
       totalPages: Math.ceil(totalProducts / limit),
     };
   }
+
+  async findOne(id: string) {
+    return await this.productRepository.findOne({ _id: id }, ['vendorId']);
+  }
 }

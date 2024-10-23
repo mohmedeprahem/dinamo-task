@@ -39,4 +39,19 @@ export class ProductRepository {
   async count(conditions: QueryOptions<Product> = {}): Promise<number> {
     return await this.productModel.countDocuments(conditions).exec();
   }
+
+  async findOne(
+    conditions: QueryOptions<Product>,
+    populate?: string[],
+  ): Promise<ProductDocument> {
+    let query = this.productModel.findOne(conditions);
+
+    if (populate) {
+      populate.forEach((field) => {
+        query = query.populate(field.trim());
+      });
+    }
+
+    return await query.exec();
+  }
 }
