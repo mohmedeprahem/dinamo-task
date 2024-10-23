@@ -52,7 +52,24 @@ export class ProductService {
     }
   }
 
-  async getProducts() {
-    return await this.productRepository.find({});
+  async getProductsWithVendor(paginationParams: {
+    page: number;
+    limit: number;
+  }) {
+    const { page, limit } = paginationParams;
+    const skip = (page - 1) * limit;
+
+    const products = await this.productRepository.find({}, { skip, limit }, [
+      'vendorId',
+    ]);
+
+    const totalProducts = await this.productRepository.count();
+    return {
+      products,
+      total: totalProducts,
+      page,
+      limit,
+      totalPages: Math.ceil(totalProducts / limit),
+    };
   }
 }

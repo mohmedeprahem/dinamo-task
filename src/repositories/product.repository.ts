@@ -17,7 +17,26 @@ export class ProductRepository {
     return createdProduct.save({ session });
   }
 
-  async find(conditions: QueryOptions<Product>): Promise<ProductDocument[]> {
-    return this.productModel.find(conditions).exec();
+  async find(
+    conditions: QueryOptions<Product>,
+    options: { skip: number; limit: number },
+    populate?: string[],
+  ): Promise<ProductDocument[]> {
+    let query = this.productModel
+      .find(conditions)
+      .skip(options.skip)
+      .limit(options.limit);
+
+    if (populate) {
+      populate.forEach((field) => {
+        query = query.populate(field.trim());
+      });
+    }
+
+    return await query.exec();
+  }
+
+  async count(conditions: QueryOptions<Product> = {}): Promise<number> {
+    return await this.productModel.countDocuments(conditions).exec();
   }
 }

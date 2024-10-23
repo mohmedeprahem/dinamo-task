@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
+import { Vendor, VendorDocument } from './vendor.schema';
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -26,8 +27,12 @@ export class Product {
   @Prop({ type: Number, required: true })
   quantity: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Vendor' })
-  vendorId: mongoose.Types.ObjectId;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Vendor',
+  })
+  vendorId: mongoose.Types.ObjectId | VendorDocument;
 
   @Prop({ type: Date, required: false, default: Date.now() })
   createdAt?: Date;
