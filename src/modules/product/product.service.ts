@@ -91,16 +91,12 @@ export class ProductService {
         throw new Error('Product not found');
       }
 
-      if (product.vendorId.toString() !== VendorId) {
-        throw new Error('You are not authorized to update this product');
-      }
-
       product.name = body.name;
       product.description = body.description;
       product.price = body.price;
       product.quantity = body.quantity;
-      const updatedProduct = await this.productRepository.updateById(
-        productId,
+      const updatedProduct = await this.productRepository.update(
+        { _id: productId, vendorId: VendorId, isDeleted: false },
         product,
         session,
       );
