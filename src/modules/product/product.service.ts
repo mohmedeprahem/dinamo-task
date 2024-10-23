@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ProductRepository } from 'src/repositories';
-import { ProductCreateDTO } from './dto';
+import { ProductRepository, VendorRepository } from 'src/repositories';
+import { ProductCreateDTO, ProductUpdateDTO } from './dto';
 import { Product, ProductDocument } from 'src/schemas';
 import { promises as fs } from 'fs';
 import { InjectConnection } from '@nestjs/mongoose';
@@ -75,5 +75,40 @@ export class ProductService {
 
   async findOneById(id: string) {
     return await this.productRepository.findOne({ _id: id }, ['vendorId']);
+  }
+
+  async update(VendorId: string, id: string, body: ProductUpdateDTO) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const product = await this.productRepository.findOne({ _id: id });
+      if (!product) {
+        throw new Error('Product not found');
+      }
+
+      if (product.vendorId.toString() !== VendorId) {
+        throw new Error('You are not authorized to update this product');
+      }
+
+      product.name = body.name;
+      product.description = body.description;
+      product.price = body.price;
+      product.quantity = body.quantity;
+      const updatedProduct = await this.productRepository.updateById(
+        id,
+        product,
+        session,
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedProduct;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 }

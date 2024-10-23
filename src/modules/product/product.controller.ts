@@ -5,15 +5,17 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
   Req,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ProductService } from './product.service';
-import { ProductCreateDTO } from './dto';
+import { ProductCreateDTO, ProductUpdateDTO } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
@@ -118,6 +120,35 @@ export class ProductController {
                 name: product.vendorId.name,
               },
       },
+    };
+  }
+
+  @Put(':productId')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('token')
+  async update(
+    @Req() req: any,
+    @Param('productId') productId: string,
+    @Body() body: ProductUpdateDTO,
+  ) {
+    if (!req.user.isVendor) {
+      throw new UnauthorizedException('Only vendors can create products');
+    }
+
+    const updatedProduct = await this.productService.update(
+      req.user.vendorId,
+      productId,
+      body,
+    );
+
+    if (!updatedProduct) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return {
+      success: true,
+      status: 200,
+      message: 'Product updated successfully',
     };
   }
 }

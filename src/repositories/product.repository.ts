@@ -54,4 +54,14 @@ export class ProductRepository {
 
     return await query.exec();
   }
+
+  async updateById(
+    id: string,
+    body: Product,
+    session: ClientSession,
+  ): Promise<ProductDocument> {
+    return await this.productModel
+      .findByIdAndUpdate(id, body, { new: true, session })
+      .exec();
+  }
 }
