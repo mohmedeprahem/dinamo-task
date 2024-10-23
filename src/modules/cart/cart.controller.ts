@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
   Req,
   UnauthorizedException,
@@ -22,7 +23,7 @@ export class CartController {
   constructor(private cartService: CartService) {}
 
   @UseGuards(AuthGuard)
-  @Put()
+  @Post('products')
   @ApiBearerAuth('token')
   async addProductToCart(@Req() request, @Body() body: CartAddProductDTO) {
     if (request.user.isVendor)
