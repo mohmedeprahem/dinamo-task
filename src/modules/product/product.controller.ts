@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  Request,
   UnauthorizedException,
   UploadedFile,
   UseGuards,
@@ -69,11 +70,14 @@ export class ProductController {
   async getAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
+    @Req() request,
   ) {
     const productsData = await this.productService.getProductsWithVendor({
       page,
       limit,
     });
+
+    const host = request.get('host');
 
     return {
       success: true,
@@ -83,7 +87,7 @@ export class ProductController {
           id: product._id,
           name: product.name,
           price: product.price,
-          imageUrl: product.imageUrl,
+          imageUrl: `http://${host}/products/images/${product.imageUrl}`,
           rate: product.rate,
           vendor:
             product.vendorId instanceof mongoose.Types.ObjectId
@@ -102,12 +106,14 @@ export class ProductController {
   }
 
   @Get(':id')
-  async getOne(@Param('id') id: string) {
+  async getOne(@Req() request, @Param('id') id: string) {
     const product = await this.productService.findOneById(id);
 
     if (!product) {
       throw new NotFoundException('Product not found');
     }
+
+    const host = request.get('host');
 
     return {
       success: true,
@@ -118,7 +124,7 @@ export class ProductController {
         price: product.price,
         description: product.description,
         quantity: product.quantity,
-        imageUrl: product.imageUrl,
+        imageUrl: `http://${host}/products/images/${product.imageUrl}`,
         rate: product.rate,
         vendor:
           product.vendorId instanceof mongoose.Types.ObjectId

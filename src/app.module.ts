@@ -19,7 +19,7 @@ import { join } from 'path';
     UserModule,
     CartModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads', 'images'),
+      rootPath: join(__dirname, '..', 'uploads'),
     }),
   ],
   controllers: [AppController],

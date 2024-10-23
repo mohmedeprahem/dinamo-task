@@ -25,7 +25,10 @@ export class ProductService {
       const timestamp = Date.now();
       const uniqueFilename = `${timestamp}-${image.filename}.${image.mimetype.split('/')[1]}`;
 
-      await fs.writeFile(`./uploads/images/${uniqueFilename}`, image.buffer);
+      await fs.writeFile(
+        `./uploads/products/images/${uniqueFilename}`,
+        image.buffer,
+      );
 
       const newProduct: Product = {
         name: body.name,
