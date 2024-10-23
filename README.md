@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a Social Media API built using NestJS, providing essential functionalities for a social networking platform.
+This project is a e-commerce demo built using NestJS, providing essential functionalities for a e-commerce platform.
 
 **Technologies**: NestJS, TypeScript, PostgreSQL and JWT.
 
