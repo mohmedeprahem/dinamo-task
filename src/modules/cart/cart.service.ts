@@ -74,4 +74,10 @@ export class CartService {
       throw error;
     }
   }
+
+  async getCart(userId: string) {
+    return await this.cartRepository.findOne({ userId }, [
+      { path: 'products.id', model: 'Product' },
+    ]);
+  }
 }

@@ -18,7 +18,7 @@ export class CartRepository {
 
   async findOne(
     conditions: QueryOptions<Cart> = {},
-    populate?: string[],
+    populate?: { path: string; model?: string }[],
   ): Promise<CartDocument> {
     let query = this.cartModel.findOne(conditions);
 

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Put,
   Req,
   UnauthorizedException,
@@ -10,6 +11,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CartAddProductDTO } from './dto';
+import mongoose from 'mongoose';
 
 @ApiTags('carts')
 @Controller('carts')
@@ -29,6 +31,37 @@ export class CartController {
       success: true,
       status: 200,
       message: 'Product added to cart successfully',
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('token')
+  @Get()
+  async getCart(@Req() request) {
+    if (request.user.isVendor)
+      throw new UnauthorizedException('Only users can get cart');
+
+    const cartData = await this.cartService.getCart(request.user.id);
+
+    return {
+      success: true,
+      status: 200,
+      data: {
+        cart: {
+          id: cartData._id,
+          products: cartData.products.map((product) => {
+            return product.id instanceof mongoose.Types.ObjectId
+              ? null
+              : {
+                  id: product.id._id,
+                  name: product.id.name,
+                  price: product.id.price,
+                  imageUrl: product.id.imageUrl,
+                  quantity: product.quantity,
+                };
+          }),
+        },
+      },
     };
   }
 }
