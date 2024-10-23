@@ -73,7 +73,7 @@ export class ProductService {
     };
   }
 
-  async findOne(id: string) {
+  async findOneById(id: string) {
     return await this.productRepository.findOne({ _id: id }, ['vendorId']);
   }
 }

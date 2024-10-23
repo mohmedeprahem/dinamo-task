@@ -94,7 +94,7 @@ export class ProductController {
 
   @Get(':id')
   async getOne(@Param('id') id: string) {
-    const product = await this.productService.findOne(id);
+    const product = await this.productService.findOneById(id);
 
     if (!product) {
       throw new NotFoundException('Product not found');
