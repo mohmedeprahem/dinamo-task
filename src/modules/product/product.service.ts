@@ -51,4 +51,8 @@ export class ProductService {
       throw error;
     }
   }
+
+  async getProducts() {
+    return await this.productRepository.find({});
+  }
 }

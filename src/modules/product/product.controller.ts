@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   UploadedFile,
@@ -43,6 +44,16 @@ export class ProductController {
       success: true,
       status: 201,
       message: 'Product created successfully',
+    };
+  }
+
+  @Get()
+  async getAll() {
+    const products = await this.productService.getProducts();
+    return {
+      success: true,
+      status: 200,
+      data: products,
     };
   }
 }

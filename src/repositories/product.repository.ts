@@ -16,4 +16,8 @@ export class ProductRepository {
     const createdProduct = new this.productModel(newProduct);
     return createdProduct.save({ session });
   }
+
+  async find(conditions: QueryOptions<Product>): Promise<ProductDocument[]> {
+    return this.productModel.find(conditions).exec();
+  }
 }
