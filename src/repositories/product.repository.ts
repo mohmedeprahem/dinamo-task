@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, Model, QueryOptions } from 'mongoose';
+import mongoose, { ClientSession, Model, QueryOptions } from 'mongoose';
 import { Product, ProductDocument } from 'src/schemas';
 
 @Injectable()
@@ -53,6 +53,10 @@ export class ProductRepository {
     }
 
     return await query.exec();
+  }
+
+  async findById(id: string): Promise<ProductDocument> {
+    return this.productModel.findById(id).exec();
   }
 
   async updateById(

@@ -77,12 +77,12 @@ export class ProductService {
     return await this.productRepository.findOne({ _id: id }, ['vendorId']);
   }
 
-  async update(VendorId: string, id: string, body: ProductUpdateDTO) {
+  async update(VendorId: string, productId: string, body: ProductUpdateDTO) {
     const session = await this.connection.startSession();
     session.startTransaction();
 
     try {
-      const product = await this.productRepository.findOne({ _id: id });
+      const product = await this.productRepository.findById(productId);
       if (!product) {
         throw new Error('Product not found');
       }
@@ -96,7 +96,7 @@ export class ProductService {
       product.price = body.price;
       product.quantity = body.quantity;
       const updatedProduct = await this.productRepository.updateById(
-        id,
+        productId,
         product,
         session,
       );
