@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  Patch,
   Put,
   Req,
   UnauthorizedException,
@@ -62,6 +65,30 @@ export class CartController {
           }),
         },
       },
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('token')
+  @Delete('products/:ProductId')
+  async removeProductFromCart(
+    @Req() request,
+    @Param('ProductId') ProductId: string,
+  ) {
+    if (request.user.isVendor)
+      throw new UnauthorizedException(
+        'Only users can remove products from cart',
+      );
+
+    const cart = await this.cartService.removeProductFromCart(
+      request.user.id,
+      ProductId,
+    );
+
+    return {
+      success: true,
+      status: 200,
+      message: 'Product removed from cart successfully',
     };
   }
 }

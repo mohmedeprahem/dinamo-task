@@ -80,4 +80,42 @@ export class CartService {
       { path: 'products.id', model: 'Product' },
     ]);
   }
+
+  async removeProductFromCart(userId: string, productId: string) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const cart = await this.cartRepository.findOne({ userId });
+
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+
+      const productIndex = cart.products.findIndex(
+        (p) => p.id.toString() === productId,
+      );
+
+      if (productIndex === -1) {
+        throw new Error('Product not found in cart');
+      }
+
+      cart.products.splice(productIndex, 1);
+
+      const updatedCart = await this.cartRepository.update(
+        { _id: cart._id },
+        cart,
+        session,
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedCart;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
 }
