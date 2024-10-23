@@ -46,6 +46,7 @@ export class CartController {
       throw new UnauthorizedException('Only users can get cart');
 
     const cartData = await this.cartService.getCart(request.user.id);
+    let totalPrice = 0;
 
     return {
       success: true,
@@ -54,16 +55,20 @@ export class CartController {
         cart: {
           id: cartData._id,
           products: cartData.products.map((product) => {
-            return product.id instanceof mongoose.Types.ObjectId
-              ? null
-              : {
-                  id: product.id._id,
-                  name: product.id.name,
-                  price: product.id.price,
-                  imageUrl: product.id.imageUrl,
-                  quantity: product.quantity,
-                };
+            if (product.id instanceof mongoose.Types.ObjectId) {
+              return null;
+            } else {
+              totalPrice += product.id.price * product.quantity;
+              return {
+                id: product.id._id,
+                name: product.id.name,
+                price: product.id.price,
+                imageUrl: product.id.imageUrl,
+                quantity: product.quantity,
+              };
+            }
           }),
+          totalPrice,
         },
       },
     };
