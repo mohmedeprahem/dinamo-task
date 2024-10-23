@@ -78,7 +78,9 @@ export class ProductService {
   }
 
   async findOneById(id: string) {
-    return await this.productRepository.findOne({ _id: id }, ['vendorId']);
+    return await this.productRepository.findOne({ _id: id, isDeleted: false }, [
+      'vendorId',
+    ]);
   }
 
   async update(VendorId: string, productId: string, body: ProductUpdateDTO) {
